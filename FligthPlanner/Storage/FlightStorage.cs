@@ -12,7 +12,8 @@ namespace FlightPlanner.Storage
             flight.Id = _ID++;
             _flightStorage.Add(flight);
         }
-        public void RemoveFlight(int id) => _flightStorage.RemoveAll(flight => flight.Id == id);
+        public void RemoveFlight(int id) => 
+            _flightStorage.RemoveAll(flight => flight.Id == id);
 
         public void ClearFlights()
         {
@@ -43,7 +44,8 @@ namespace FlightPlanner.Storage
 
             return flight;
         }
-        public Flights SearchFlightById(int id) => _flightStorage.FirstOrDefault(s => s.Id == id);
+        public Flights SearchFlightById(int id) => 
+            _flightStorage.FirstOrDefault(s => s.Id == id);
         public List<Flights> GetFlights() => _flightStorage;
         public Flights? CheckFlightsDuplicateEntry(Flights flight)
         {
