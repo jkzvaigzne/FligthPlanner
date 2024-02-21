@@ -1,0 +1,6 @@
+@FligthPlanner_HostAddress = http://localhost:5065
+
+GET {{FligthPlanner_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
