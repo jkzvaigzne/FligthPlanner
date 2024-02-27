@@ -9,29 +9,26 @@ namespace FligthPlanner.Controllers
     [Route("api")]
     public class CustomerFlightApiController : ControllerBase
     {
-        private readonly FlightStorage _storage = new();
+        private readonly SortedData _data;
 
+        public CustomerFlightApiController(FlightPlannerDbContext context)
+        {
+            _data = new SortedData(context);
+        }
         [HttpGet]
         [Route("airports")]
-        public IActionResult SearchAirport(string search)
+        public IActionResult SearchAirport([FromQuery] string search)
         {
-            var flight = _storage.SearchAirport(search);
-
-            if (flight != null)
-            {
-                var res = new[] { flight.From };
-                return Ok(res);
-            }
-            else
-            {
-                return NotFound("airport not found.");
-            }
+            var flight = _data.SearchAirport(search);
+            return Ok(flight);
         }
+
+
         [HttpGet]
         [Route("flights/{id}")]
         public IActionResult SearchFlightById(int id)
         {
-            var result = _storage.SearchFlightById(id);
+            var result = _data.SearchFlightById(id);
 
             if (result == null)
             {
@@ -44,7 +41,7 @@ namespace FligthPlanner.Controllers
         [Route("flights/search")]
         public IActionResult GetFlights(SearchFlightsRequest request)
         {
-            var res = _storage.SearchFlight(request);
+            var res = _data.SearchFlight(request);
             
             if (request.From == request.To)
             {

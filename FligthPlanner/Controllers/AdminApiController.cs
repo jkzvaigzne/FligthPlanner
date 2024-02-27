@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using FlightPlanner.Models;
 using FlightPlanner.Storage;
 using System.Threading.Tasks;
+using FligthPlanner;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlanner.Controllers
 {
@@ -11,16 +13,27 @@ namespace FlightPlanner.Controllers
     [Route("admin-api")]
     public class AdminApiController : ControllerBase
     {
+        private readonly FlightPlannerDbContext _context;
         private static readonly object _lock = new object();
-        private readonly FlightStorage _storage;
-        public AdminApiController()
+        private readonly SortedData _data;
+        public AdminApiController(FlightPlannerDbContext context)
         {
-            _storage = new FlightStorage();
+            _data = new SortedData(context);
+            _context = context;
         }
 
         [Route("flights/{id}")]
         [HttpGet]
-        public IActionResult GetFlight(int id) => NotFound(id);
+        public IActionResult GetFlight(int id) 
+        {
+            var flights = _context.Flights.SingleOrDefault(f => f.Id == id);
+            if(flights == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(flights);
+        } 
 
         [HttpPut]
         [Route("flights")]
@@ -28,16 +41,17 @@ namespace FlightPlanner.Controllers
         {
             lock (_lock) 
             { 
-            if (!_storage.ValidateFlightsEntry(fligth) || _storage.ValidateFlightDestination(fligth) || !_storage.ValidateFlightsDate(fligth))
+            if (!_data.ValidateFlightsEntry(fligth) || _data.ValidateFlightDestination(fligth) || !_data.ValidateFlightsDate(fligth))
             {
                 return BadRequest();
             }
-            if (_storage.CheckFlightsDuplicateEntry(fligth) != null)
+            if (_data.CheckFlightsDuplicateEntry(fligth) != null)
             {
                 return Conflict(fligth);
             }
-           
-            _storage.AddFlight(fligth);
+
+            _context.Flights.Add(fligth);
+            _context.SaveChanges();
 
             return Created("", fligth);
             }
@@ -45,13 +59,21 @@ namespace FlightPlanner.Controllers
 
         [HttpDelete]
         [Route("flights/{id}")]
-        public IActionResult RemoveFlights(int id) 
+        public IActionResult RemoveFlights(int id)
         {
-            lock (_lock) { 
-            _storage.RemoveFlight(id);
+            lock (_lock)
+            {
+                var flightToDelete = _context.Flights.Find(id);
 
-            return Ok(id);
+                if (flightToDelete != null)
+                {
+                    _context.Flights.Remove(flightToDelete);
+                    _context.SaveChanges();
+                }
             }
+            return Ok(id);
         }
     }
 }
+
+

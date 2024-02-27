@@ -1,16 +1,23 @@
 ﻿using FlightPlanner.Models;
+using FligthPlanner;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlightPlanner.Storage
 {
     public class FlightStorage
     {
+        private readonly FlightPlannerDbContext _dbContext;
         private static List<Flights> _flightStorage = new List<Flights>();
-
         private static int _ID = 1;
+
+        public FlightStorage(FlightPlannerDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
         public void AddFlight(Flights flight)
         {
             flight.Id = _ID++;
-            _flightStorage.Add(flight);
+            _dbContext.Add(flight);
         }
         public void RemoveFlight(int id) => 
             _flightStorage.RemoveAll(flight => flight.Id == id);
@@ -44,12 +51,10 @@ namespace FlightPlanner.Storage
 
             return flight;
         }
-        public Flights SearchFlightById(int id) => 
-            _flightStorage.FirstOrDefault(s => s.Id == id);
-        public List<Flights> GetFlights() => _flightStorage;
+
         public Flights? CheckFlightsDuplicateEntry(Flights flight)
         {
-            return _flightStorage.Where(existingF =>
+            var isSameData = _dbContext.Flights.Where(existingF =>
                 existingF.From.AirportCode == flight.From.AirportCode &&
                 existingF.From.Country == flight.From.Country &&
                 existingF.From.City == flight.From.City &&
@@ -60,7 +65,13 @@ namespace FlightPlanner.Storage
                 existingF.DepartureTime == flight.DepartureTime &&
                 existingF.ArrivalTime == flight.ArrivalTime)
                 .ToList().FirstOrDefault();
+
+            return isSameData;
         }
+        public Flights SearchFlightById(int id) => 
+            _flightStorage.FirstOrDefault(s => s.Id == id);
+        public List<Flights> GetFlights() => _flightStorage;
+       
         public bool ValidateFlightsEntry(Flights flight) => new[]
         {
             flight.From.Country, flight.From.City, flight.From.AirportCode,
@@ -79,6 +90,7 @@ namespace FlightPlanner.Storage
             return true;
         }
 
-        public bool ValidateFlightDestination(Flights flight) => flight.From.AirportCode.Trim().ToLower() == flight.To.AirportCode.Trim().ToLower();
+        public bool ValidateFlightDestination(Flights flight) =>
+            flight.From.AirportCode.Trim().ToLower() == flight.To.AirportCode.Trim().ToLower();
     }
 }
