@@ -9,11 +9,11 @@ namespace FligthPlanner.Controllers
     [Route("api")]
     public class CustomerFlightApiController : ControllerBase
     {
-        private readonly SortedData _data;
+        private readonly DBData _data;
 
         public CustomerFlightApiController(FlightPlannerDbContext context)
         {
-            _data = new SortedData(context);
+            _data = new DBData(context);
         }
         [HttpGet]
         [Route("airports")]

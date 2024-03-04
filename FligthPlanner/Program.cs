@@ -21,7 +21,8 @@ namespace FlightPlanner
             // Connection
             builder.Services.AddDbContext<FlightPlannerDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("flight-planner")));
-
+            // Register
+            builder.Services.AddScoped<DBData>();
             builder.Services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FligthPlanner
 {
-    public class SortedData
+    public class DBData
     {
         private readonly FlightPlannerDbContext _context;
 
-        public SortedData(FlightPlannerDbContext context)
+        public DBData(FlightPlannerDbContext context)
         {
             _context = context;
         }

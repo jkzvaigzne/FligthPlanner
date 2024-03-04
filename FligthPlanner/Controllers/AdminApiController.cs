@@ -14,12 +14,12 @@ namespace FlightPlanner.Controllers
     public class AdminApiController : ControllerBase
     {
         private readonly FlightPlannerDbContext _context;
+        private readonly DBData _data;
         private static readonly object _lock = new object();
-        private readonly SortedData _data;
-        public AdminApiController(FlightPlannerDbContext context)
+        public AdminApiController(FlightPlannerDbContext context, DBData data)
         {
-            _data = new SortedData(context);
             _context = context;
+            _data = data;
         }
 
         [Route("flights/{id}")]
