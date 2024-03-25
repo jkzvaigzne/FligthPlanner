@@ -1,13 +1,18 @@
-
 using FlightPlanner.Handlers;
-using FligthPlanner;
+using FlightPlanner.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using FligthPlanner.Data;
+using FligthPlanner.Core.Services;
+using FligthPlanner.Services;
+using FligthPlanner.Core.Models;
 
 namespace FlightPlanner
 {
     public class Program
     {
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -21,8 +26,16 @@ namespace FlightPlanner
             // Connection
             builder.Services.AddDbContext<FlightPlannerDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("flight-planner")));
+            // Customs
+            builder.Services.AddTransient<IFlightPlannerDbContext, FlightPlannerDbContext>();
+            builder.Services.AddTransient<IDbService, DbService>();
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            builder.Services.AddTransient<IAirportService, AirportService>();
+            builder.Services.AddTransient<ICleanupService, CleanupService>();
+            builder.Services.AddTransient<IFlightService, FlightService>();
+            builder.Services.AddTransient<IEntityService<Airport>, EntityService<Airport>>();
+            builder.Services.AddTransient<IEntityService<Flights>, EntityService<Flights>>();
             // Register
-            builder.Services.AddScoped<DBData>();
             builder.Services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 

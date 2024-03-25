@@ -1,30 +1,21 @@
-﻿﻿using FlightPlanner.Storage;
-using FligthPlanner;
+﻿using FligthPlanner.Core.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
 
-namespace FlightPlanner.Controllers
+namespace FligthPlanner.Controllers
 {
     [ApiController]
     [Route("testing-api")]
     public class ClearApiController : ControllerBase
     {
-        private readonly FlightPlannerDbContext _context;
+        private readonly ICleanupService _service;
 
-        public ClearApiController(FlightPlannerDbContext context)
-        {
-            _context = context;
-        }
+        public ClearApiController(ICleanupService service) => _service = service;
 
-        [HttpPost]
-        [Route("clear")]
-        public IActionResult ClearFlights()
+        [HttpPost("clear")]
+        public IActionResult Clear(int id)
         {
-            _context.Airports.RemoveRange(_context.Airports);
-            _context.Flights.RemoveRange(_context.Flights);
-            _context.SaveChanges();
-            
+            _service.Cleaner();
+
             return Ok();
         }
     }

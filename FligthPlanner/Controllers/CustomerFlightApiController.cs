@@ -1,61 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FlightPlanner.Storage;
-using FlightPlanner.Models;
+using AutoMapper;
+using FligthPlanner.Core.Services;
 using FligthPlanner.Models;
 
 namespace FligthPlanner.Controllers
 {
-    [ApiController]
     [Route("api")]
+    [ApiController]
     public class CustomerFlightApiController : ControllerBase
     {
-        private readonly DBData _data;
+        private readonly IMapper _mapper;
+        private readonly IAirportService _airService;
+        private readonly IFlightService _service;
 
-        public CustomerFlightApiController(FlightPlannerDbContext context)
-        {
-            _data = new DBData(context);
-        }
-        [HttpGet]
-        [Route("airports")]
-        public IActionResult SearchAirport([FromQuery] string search)
-        {
-            var flight = _data.SearchAirport(search);
-            return Ok(flight);
-        }
+        public CustomerFlightApiController(IFlightService service, IAirportService airService, IMapper mapper)
+            => (_service, _airService, _mapper) = (service, airService, mapper);
 
+        [HttpGet("flights/{id}")]
+        public IActionResult FindFlightById(int id)
+            => _service.FullFlightById(id) is var flight && flight != null ? Ok(flight) : NotFound();
 
-        [HttpGet]
-        [Route("flights/{id}")]
-        public IActionResult SearchFlightById(int id)
-        {
-            var result = _data.SearchFlightById(id);
+        [HttpGet("airports")]
+        public IActionResult SearchAirports(string search)
+            => Ok(_mapper.Map<List<AirportViewModel>>(_airService.SearchAirports(search)));
 
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
-        }
-        [HttpPost]
-        [Route("flights/search")]
-        public IActionResult GetFlights(SearchFlightsRequest request)
-        {
-            var res = _data.SearchFlight(request);
-            
-            if (request.From == request.To)
-            {
-                return BadRequest();
-            }
-
-            var pageRes = new PageResult<Flights>
-            {
-                Page = 0,
-                TotalItems = res.Count(),
-                Items = res
-            };
-
-            return Ok(pageRes);
-        }
+        [HttpGet("flights/search")]
+        public IActionResult SearchFlights(string search)
+            => Ok();
     }
 }

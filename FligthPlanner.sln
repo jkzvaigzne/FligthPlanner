@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FligthPlanner", "FligthPlanner\FligthPlanner.csproj", "{6E6DA673-BA4E-423B-B51A-84DEF8FC95C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FligthPlanner", "FligthPlanner\FligthPlanner.csproj", "{6E6DA673-BA4E-423B-B51A-84DEF8FC95C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FligthPlanner.Core", "FligthPlanner.Core\FligthPlanner.Core.csproj", "{F5A88881-2795-41B1-B240-3C283A7DD371}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FligthPlanner.Data", "FligthPlanner.Data\FligthPlanner.Data.csproj", "{3A89532C-788A-423B-A467-4737C82E7DA4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FligthPlanner.Services", "FligthPlanner.Services\FligthPlanner.Services.csproj", "{69822A54-62A7-4A8B-BC2F-8C4DB1B7CE90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FligthPlanner.UseCases", "FligthPlanner.UseCases\FligthPlanner.UseCases.csproj", "{15EE40C9-0439-411B-B1A9-2FBC342AED04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +23,22 @@ Global
 		{6E6DA673-BA4E-423B-B51A-84DEF8FC95C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E6DA673-BA4E-423B-B51A-84DEF8FC95C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E6DA673-BA4E-423B-B51A-84DEF8FC95C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5A88881-2795-41B1-B240-3C283A7DD371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5A88881-2795-41B1-B240-3C283A7DD371}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5A88881-2795-41B1-B240-3C283A7DD371}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5A88881-2795-41B1-B240-3C283A7DD371}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A89532C-788A-423B-A467-4737C82E7DA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A89532C-788A-423B-A467-4737C82E7DA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A89532C-788A-423B-A467-4737C82E7DA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A89532C-788A-423B-A467-4737C82E7DA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69822A54-62A7-4A8B-BC2F-8C4DB1B7CE90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69822A54-62A7-4A8B-BC2F-8C4DB1B7CE90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69822A54-62A7-4A8B-BC2F-8C4DB1B7CE90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69822A54-62A7-4A8B-BC2F-8C4DB1B7CE90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15EE40C9-0439-411B-B1A9-2FBC342AED04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15EE40C9-0439-411B-B1A9-2FBC342AED04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15EE40C9-0439-411B-B1A9-2FBC342AED04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15EE40C9-0439-411B-B1A9-2FBC342AED04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
