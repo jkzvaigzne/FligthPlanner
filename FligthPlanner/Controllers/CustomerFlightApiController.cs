@@ -1,64 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using FlightPlanner.Storage;
-using FlightPlanner.Models;
+using AutoMapper;
+using FligthPlanner.Core.Services;
 using FligthPlanner.Models;
 
 namespace FligthPlanner.Controllers
 {
-    [ApiController]
     [Route("api")]
+    [ApiController]
     public class CustomerFlightApiController : ControllerBase
     {
-        private readonly FlightStorage _storage = new();
+        private readonly IMapper _mapper;
+        private readonly IAirportService _airService;
+        private readonly IFlightService _service;
 
-        [HttpGet]
-        [Route("airports")]
-        public IActionResult SearchAirport(string search)
-        {
-            var flight = _storage.SearchAirport(search);
+        public CustomerFlightApiController(IFlightService service, IAirportService airService, IMapper mapper)
+            => (_service, _airService, _mapper) = (service, airService, mapper);
 
-            if (flight != null)
-            {
-                var res = new[] { flight.From };
-                return Ok(res);
-            }
-            else
-            {
-                return NotFound("airport not found.");
-            }
-        }
-        [HttpGet]
-        [Route("flights/{id}")]
-        public IActionResult SearchFlightById(int id)
-        {
-            var result = _storage.SearchFlightById(id);
+        [HttpGet("flights/{id}")]
+        public IActionResult FindFlightById(int id)
+            => _service.FullFlightById(id) is var flight && flight != null ? Ok(flight) : NotFound();
 
-            if (result == null)
-            {
-                return NotFound();
-            }
+        [HttpGet("airports")]
+        public IActionResult SearchAirports(string search)
+            => Ok(_mapper.Map<List<AirportViewModel>>(_airService.SearchAirports(search)));
 
-            return Ok(result);
-        }
-        [HttpPost]
-        [Route("flights/search")]
-        public IActionResult GetFlights(SearchFlightsRequest request)
-        {
-            var res = _storage.SearchFlight(request);
-            
-            if (request.From == request.To)
-            {
-                return BadRequest();
-            }
-
-            var pageRes = new PageResult<Flights>
-            {
-                Page = 0,
-                TotalItems = res.Count(),
-                Items = res
-            };
-
-            return Ok(pageRes);
-        }
+        [HttpGet("flights/search")]
+        public IActionResult SearchFlights(string search)
+            => Ok();
     }
 }
